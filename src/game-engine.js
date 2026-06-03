@@ -1,7 +1,7 @@
-import { ACCESS_CARD_IDS, LOCK_CODE, PRIZES, SCORE_KEYS, VALID_RUNE_IDS } from './game-data.js';
+import { ACCESS_CARD_IDS, LOCK_CODE, LOCK_QUESTIONS, PRIZES, SCORE_KEYS, VALID_RUNE_IDS } from './game-data.js';
 
 export const ACCESS_CODES = ['OTTER', 'SERPENT', 'GRANGER'];
-export { ACCESS_CARD_IDS, LOCK_CODE, VALID_RUNE_IDS };
+export { ACCESS_CARD_IDS, LOCK_CODE, LOCK_QUESTIONS, VALID_RUNE_IDS };
 
 const TIE_PRIORITY = [
   'gentle-monster',
@@ -24,6 +24,7 @@ export function createInitialState() {
     selectedLogicPath: null,
     selectedRune: null,
     selectedPotionBottles: [],
+    lockAnswers: {},
     selectedSealPhrase: null,
     finalEnvelopeCode: null
   };
@@ -53,6 +54,17 @@ export function isRuneEntranceValid(runeId) {
 
 export function isLockCodeValid(code) {
   return String(code ?? '').trim() === LOCK_CODE;
+}
+
+export function isLockQuizComplete(answers) {
+  if (!answers || typeof answers !== 'object') {
+    return false;
+  }
+
+  return LOCK_QUESTIONS.every((question) => {
+    const selectedOption = question.options.find((option) => option.id === answers[question.id]);
+    return selectedOption?.isCorrect === true;
+  });
 }
 
 export function applyChoiceScores(state, tags) {

@@ -549,12 +549,155 @@ input {
   padding: 10px;
   border: 1px solid rgba(217, 213, 197, 0.2);
   border-radius: 8px;
-  background: rgba(0, 0, 0, 0.14);
+  background:
+    radial-gradient(circle at 50% 36%, rgba(182, 155, 94, 0.18), transparent 52%),
+    rgba(0, 0, 0, 0.14);
+  margin-bottom: 14px;
 }
 
 .lock-visual svg {
   width: 100%;
   display: block;
+}
+
+.lock-seal {
+  min-height: 120px;
+}
+
+.lock-digits {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.lock-digit {
+  min-height: 70px;
+  display: grid;
+  place-items: center;
+  gap: 2px;
+  border: 1px solid rgba(217, 213, 197, 0.2);
+  border-radius: 8px;
+  color: rgba(247, 240, 220, 0.62);
+  background:
+    linear-gradient(180deg, rgba(236, 224, 197, 0.08), rgba(0, 0, 0, 0.14)),
+    rgba(255, 255, 255, 0.04);
+}
+
+.lock-digit small {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.lock-digit strong {
+  font-size: 32px;
+  line-height: 1;
+}
+
+.lock-digit.is-solved {
+  color: #132b24;
+  border-color: var(--gold);
+  background:
+    linear-gradient(180deg, rgba(247, 240, 220, 0.95), rgba(203, 184, 134, 0.9)),
+    var(--paper-texture) center / cover;
+  box-shadow: 0 0 24px rgba(182, 155, 94, 0.24);
+}
+
+.lock-quiz {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.lock-question {
+  padding: 12px;
+  border: 1px solid rgba(217, 213, 197, 0.24);
+  border-radius: 8px;
+  background:
+    linear-gradient(145deg, rgba(236, 224, 197, 0.08), rgba(255, 255, 255, 0.02)),
+    rgba(0, 0, 0, 0.12);
+}
+
+.lock-question header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.lock-question header span {
+  color: var(--gold);
+  font-size: 13px;
+}
+
+.lock-question header strong {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(217, 213, 197, 0.28);
+  border-radius: 50%;
+  color: var(--paper);
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 20px;
+}
+
+.lock-question p {
+  margin: 0 0 10px;
+  color: var(--silver);
+}
+
+.lock-question small {
+  display: block;
+  margin-top: 9px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.lock-question.is-solved {
+  border-color: rgba(182, 155, 94, 0.7);
+  box-shadow: inset 0 0 0 1px rgba(182, 155, 94, 0.14);
+}
+
+.lock-question.is-solved header strong {
+  color: #132b24;
+  background: var(--paper);
+  border-color: var(--gold);
+}
+
+.lock-question.is-wrong {
+  border-color: rgba(186, 98, 89, 0.55);
+}
+
+.lock-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.lock-option {
+  min-height: 42px;
+  padding: 8px 10px;
+  border: 1px solid rgba(217, 213, 197, 0.26);
+  border-radius: 6px;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.lock-option.is-selected {
+  border-color: var(--gold);
+  background: rgba(182, 155, 94, 0.18);
+}
+
+.lock-option.is-correct {
+  color: #132b24;
+  background: var(--paper);
+}
+
+.lock-option.is-wrong {
+  border-color: rgba(186, 98, 89, 0.75);
+  background: rgba(110, 38, 56, 0.28);
 }
 
 .seal {
@@ -914,5 +1057,25 @@ input {
 
   .clue-artifact {
     height: 60px;
+  }
+
+  .lock-digits {
+    gap: 6px;
+  }
+
+  .lock-digit {
+    min-height: 62px;
+  }
+
+  .lock-digit strong {
+    font-size: 28px;
+  }
+
+  .lock-options {
+    grid-template-columns: 1fr;
+  }
+
+  .lock-question {
+    padding: 11px;
   }
 }

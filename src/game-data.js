@@ -34,7 +34,7 @@ export const PRIZES = [
     displayName: '1000元内任意品牌鞋款兑换券',
     envelopeCode: 'S-03',
     categoryTags: ['style', 'practical', 'comfort'],
-    resultCopy: '蛇形路径在远行处停下。打开 S-03，把下一段路走得更漂亮。'
+    resultCopy: '远行的脚印在封印前停下。打开 S-03，把下一段路走得更漂亮。'
   },
   {
     id: 'camera',
@@ -89,7 +89,7 @@ export const VISUAL_ASSETS = {
     { stage: 'access', title: '禁书区书廊', imageUrl: './artifacts/scene-forbidden-library.svg' },
     { stage: 'logic', title: '赫敏的羊皮纸笔记', imageUrl: './artifacts/scene-logic-notebook.svg' },
     { stage: 'potion', title: '湖底公共休息室药剂架', imageUrl: './artifacts/scene-common-room.svg' },
-    { stage: 'lock', title: '密室蛇形门锁', imageUrl: './artifacts/scene-chamber-door.svg' },
+    { stage: 'lock', title: '密室问答门锁', imageUrl: './artifacts/scene-chamber-door.svg' },
     { stage: 'result', title: '最终封印桌面', imageUrl: './artifacts/scene-seal-table.svg' }
   ]
 };
@@ -326,7 +326,62 @@ export const POTION_BOTTLES = [
   }
 ];
 
-export const LOCK_DIGITS = ['1', '3', '1', '4', '0'];
+export const LOCK_QUESTIONS = [
+  {
+    id: 'snitch',
+    digit: '0',
+    source: 'original-books',
+    title: '第一枚数字',
+    prompt: '原著魁地奇规则里，抓住金色飞贼可得多少分？取这个分数的个位数字。',
+    options: [
+      { id: 'snitch-150', text: '150 分', isCorrect: true },
+      { id: 'snitch-15', text: '15 分' },
+      { id: 'snitch-20', text: '20 分' }
+    ],
+    reveal: '150 的个位是 0。'
+  },
+  {
+    id: 'privet',
+    digit: '4',
+    source: 'original-books',
+    title: '第二枚数字',
+    prompt: '原著开篇里，德思礼一家住在女贞路几号？',
+    options: [
+      { id: 'privet-12', text: '12 号' },
+      { id: 'privet-4', text: '4 号', isCorrect: true },
+      { id: 'privet-7', text: '7 号' }
+    ],
+    reveal: '女贞路 4 号留下第二枚数字。'
+  },
+  {
+    id: 'troll',
+    digit: '1',
+    source: 'original-books',
+    title: '第三枚数字',
+    prompt: '《魔法石》中，赫敏在女生盥洗室面对的巨怪有几只？',
+    options: [
+      { id: 'troll-1', text: '1 只', isCorrect: true },
+      { id: 'troll-2', text: '2 只' },
+      { id: 'troll-3', text: '3 只' }
+    ],
+    reveal: '那一次只有 1 只巨怪。'
+  },
+  {
+    id: 'patronum',
+    digit: '8',
+    source: 'original-books',
+    title: '第四枚数字',
+    prompt: '守护神咒 Expecto Patronum 的第二个词 Patronum 有几个英文字母？',
+    options: [
+      { id: 'patronum-7', text: '7 个' },
+      { id: 'patronum-8', text: '8 个', isCorrect: true },
+      { id: 'patronum-9', text: '9 个' }
+    ],
+    reveal: 'Patronum 有 8 个字母。'
+  }
+];
+
+export const LOCK_DIGITS = LOCK_QUESTIONS.map((question) => question.digit);
 export const LOCK_CODE = LOCK_DIGITS.join('');
 
 export const SEAL_PHRASES = [

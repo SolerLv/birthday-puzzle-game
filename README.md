@@ -35,9 +35,9 @@ node tools/serve.mjs
 
 本地临时测试也可以用局域网 IP，但需要电脑和手机在同一 Wi-Fi，并允许防火墙访问端口 `4173`。
 
-## 私密五位封印码
+## 生日问答封印码
 
-当前默认封印码是 `13140`。要换成你们的私密数字，改 `src/game-data.js` 里的 `LOCK_DIGITS`，并同步修改 `materials/printable-cards.md` 里的五张数字券。
+当前默认封印码是 `0418`，来自 4 月 18 日生日。要换成新的私密数字，改 `src/game-data.js` 里的 `LOCK_QUESTIONS`，让每道题的 `digit`、正确选项和解释对应新数字，并同步修改 `materials/printable-cards.md` 里的密室问答券。
 
 ## 素材来源
 

@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 
 import {
   ACCESS_CARDS,
+  LOCK_QUESTIONS,
   POTION_BOTTLES,
   RUNE_CELLS,
   VISUAL_ASSETS
@@ -17,6 +18,7 @@ import {
   getResultForState,
   isAccessCodeSetValid,
   isAccessCardSetValid,
+  isLockQuizComplete,
   isRuneEntranceValid,
   isLockCodeValid,
   serializeState,
@@ -72,10 +74,27 @@ test('provides rich local visual assets for clue cards, runes, potions, and ambi
   assert.equal(POTION_BOTTLES.every((bottle) => bottle.artifact && bottle.liquid), true);
 });
 
-test('uses a configurable five-digit chamber lock code', () => {
-  assert.equal(LOCK_CODE.length, 5);
+test('uses her birthday as a four-digit chamber lock code', () => {
+  assert.equal(LOCK_CODE, '0418');
+  assert.equal(LOCK_CODE.length, 4);
   assert.equal(isLockCodeValid(LOCK_CODE), true);
   assert.equal(isLockCodeValid('724'), false);
+});
+
+test('derives the chamber lock digits from four original-book quiz questions', () => {
+  assert.equal(LOCK_QUESTIONS.length, 4);
+  assert.equal(LOCK_QUESTIONS.map((question) => question.digit).join(''), '0418');
+  assert.equal(LOCK_QUESTIONS.every((question) => question.source === 'original-books'), true);
+
+  const answers = Object.fromEntries(
+    LOCK_QUESTIONS.map((question) => [
+      question.id,
+      question.options.find((option) => option.isCorrect).id
+    ])
+  );
+
+  assert.equal(isLockQuizComplete(answers), true);
+  assert.equal(isLockQuizComplete({ ...answers, snitch: 'wrong' }), false);
 });
 
 test('uses birthday-like tie priority when scores are even', () => {

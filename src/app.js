@@ -1,8 +1,7 @@
 import {
   ACCESS_CARDS,
   CORRECT_RUNE_ID,
-  LOCK_CODE,
-  LOCK_DIGITS,
+  LOCK_QUESTIONS,
   LOGIC_PATHS,
   POTION_BOTTLES,
   RUNE_CELLS,
@@ -15,7 +14,7 @@ import {
   deserializeState,
   getResultForState,
   isAccessCardSetValid,
-  isLockCodeValid,
+  isLockQuizComplete,
   isRuneEntranceValid,
   serializeState
 } from './game-engine.js';
@@ -179,19 +178,17 @@ function renderLock(feedback) {
     <header class="scene-header">
       <p class="eyebrow">Chamber Lock</p>
       <h1>密室门锁</h1>
-      <p>抽出“密室数字包”，按蛇形路径排好五张数字券，再选一句原著咒语送进锁芯。</p>
+      <p>抽出“密室问答包”，用四道原著线索唤醒四枚锁芯，再选一句守护语送进门缝。</p>
     </header>
 
-    <section class="lock-visual" aria-label="蛇形路径示意">
-      ${renderSnakePathSvg()}
+    <section class="lock-visual" aria-label="四位生日封印">
+      ${renderLockSealSvg()}
+      ${renderLockDigits()}
     </section>
 
-    <form class="lock-form" data-action="lock">
-      <label>
-        <span>蛇形数字</span>
-        <input autocomplete="off" inputmode="numeric" maxlength="5" name="lock-code" placeholder="五位封印码" />
-      </label>
-    </form>
+    <section class="lock-quiz" aria-label="密室原著问答">
+      ${LOCK_QUESTIONS.map((question) => renderLockQuestion(question)).join('')}
+    </section>
 
     <section class="phrase-grid" aria-label="守护语">
       ${SEAL_PHRASES.map(
@@ -282,6 +279,10 @@ function handleAction(event) {
     render();
   }
 
+  if (action === 'lock-answer') {
+    selectLockAnswer(event.currentTarget.dataset.question, id);
+  }
+
   if (action === 'open-lock') {
     solveLockStage();
   }
@@ -358,11 +359,8 @@ function solvePotionStage() {
 }
 
 function solveLockStage() {
-  const input = app.querySelector('input[name="lock-code"]');
-  const code = String(input?.value ?? '').trim();
-
-  if (!isLockCodeValid(code)) {
-    render('蛇形路径还没咬住尾巴。按五张数字券的路径重新读一遍。');
+  if (!isLockQuizComplete(state.lockAnswers)) {
+    render('四枚锁芯还没有全部亮起。回到原著线索里，把每一位数字问出来。');
     return;
   }
 
@@ -374,6 +372,14 @@ function solveLockStage() {
   const phrase = SEAL_PHRASES.find((item) => item.id === state.selectedSealPhrase);
   applyChoiceScores(state, phrase.scoreTags);
   playTransition('lock', () => completeStage('lock', 'result'));
+}
+
+function selectLockAnswer(questionId, optionId) {
+  state.lockAnswers = {
+    ...(state.lockAnswers ?? {}),
+    [questionId]: optionId
+  };
+  render();
 }
 
 function completeStage(currentStage, nextStage) {
@@ -397,7 +403,7 @@ function renderTransition() {
     access: '封蜡裂开，禁书区的门缝亮了起来。',
     logic: '符文沿着羽笔游走，笔记页自动翻开。',
     potion: '三瓶药剂在银杯里汇合，光雾升起。',
-    lock: '咒语落入锁芯，密室门正在回应。'
+    lock: '四枚数字归位，咒语落入锁芯，密室门正在回应。'
   };
 
   return `
@@ -620,25 +626,86 @@ function renderTransitionStage(type) {
   return stages[type] ?? stages.access;
 }
 
-function renderSnakePathSvg() {
-  const points = [
-    [34, 84],
-    [104, 42],
-    [168, 84],
-    [232, 126],
-    [300, 84]
-  ];
+function renderLockDigits() {
+  return `
+    <div class="lock-digits" aria-label="已解出的四位封印码">
+      ${LOCK_QUESTIONS.map((question, index) => {
+        const answer = getSelectedLockOption(question);
+        const solved = answer?.isCorrect === true;
+        return `
+          <span class="lock-digit ${solved ? 'is-solved' : ''}">
+            <small>${index + 1}</small>
+            <strong>${solved ? question.digit : '?'}</strong>
+          </span>
+        `;
+      }).join('')}
+    </div>
+  `;
+}
+
+function renderLockQuestion(question) {
+  const selected = state.lockAnswers?.[question.id];
+  const selectedOption = getSelectedLockOption(question);
+  const isSolved = selectedOption?.isCorrect === true;
 
   return `
-    <svg viewBox="0 0 334 170" role="img" aria-label="五位蛇形数字路径">
-      <path d="M34 84C68 12 104 12 136 84s64 72 96 0 64-72 100 0" fill="none" stroke="#8fb7a2" stroke-width="10" stroke-linecap="round"/>
-      <g fill="#f2ead2" stroke="#b69b5e" stroke-width="3">
-        ${points.map(([x, y]) => `<circle cx="${x}" cy="${y}" r="21"/>`).join('')}
+    <article class="lock-question ${isSolved ? 'is-solved' : selected ? 'is-wrong' : ''}">
+      <header>
+        <span>${question.title}</span>
+        <strong>${isSolved ? question.digit : '?'}</strong>
+      </header>
+      <p>${question.prompt}</p>
+      <div class="lock-options">
+        ${question.options.map((option) => `
+          <button
+            class="lock-option ${selected === option.id ? 'is-selected' : ''} ${selected === option.id && option.isCorrect ? 'is-correct' : ''} ${selected === option.id && !option.isCorrect ? 'is-wrong' : ''}"
+            data-action="lock-answer"
+            data-question="${question.id}"
+            data-id="${option.id}"
+          >
+            ${option.text}
+          </button>
+        `).join('')}
+      </div>
+      ${selected ? `<small>${isSolved ? question.reveal : '这枚锁芯没有转动，再换一个原著答案。'}</small>` : ''}
+    </article>
+  `;
+}
+
+function getSelectedLockOption(question) {
+  return question.options.find((option) => option.id === state.lockAnswers?.[question.id]);
+}
+
+function renderLockSealSvg() {
+  return `
+    <svg class="lock-seal" viewBox="0 0 334 150" role="img" aria-label="四枚问答锁芯">
+      <defs>
+        <radialGradient id="lockGlow" cx="50%" cy="45%" r="65%">
+          <stop offset="0" stop-color="#f1df9a" stop-opacity="0.9" />
+          <stop offset="0.52" stop-color="#5d9f7e" stop-opacity="0.42" />
+          <stop offset="1" stop-color="#0d2b25" stop-opacity="0" />
+        </radialGradient>
+      </defs>
+      <path d="M36 76C76 16 108 16 143 76s58 60 95 0 55-60 62-18" fill="none" stroke="#9fc5b2" stroke-width="8" stroke-linecap="round" opacity="0.72"/>
+      <path d="M280 47c16 6 26 17 30 32-14-8-27-9-42-3 8-7 10-17 12-29Z" fill="#d7c58f"/>
+      <g fill="url(#lockGlow)">
+        <circle cx="42" cy="84" r="32" />
+        <circle cx="124" cy="50" r="32" />
+        <circle cx="210" cy="98" r="32" />
+        <circle cx="292" cy="66" r="32" />
       </g>
-      <g fill="#14372d" font-size="24" font-family="Georgia, serif" text-anchor="middle" dominant-baseline="central">
-        ${points.map(([x, y], index) => `<text x="${x}" y="${y}">${index + 1}</text>`).join('')}
+      <g fill="#efe5c5" stroke="#b69b5e" stroke-width="3">
+        <circle cx="42" cy="84" r="22" />
+        <circle cx="124" cy="50" r="22" />
+        <circle cx="210" cy="98" r="22" />
+        <circle cx="292" cy="66" r="22" />
       </g>
-      <path d="M314 74 328 84 314 94" fill="none" stroke="#b69b5e" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      <g fill="#14372d" font-size="20" font-family="Georgia, serif" text-anchor="middle" dominant-baseline="central">
+        <text x="42" y="84">?</text>
+        <text x="124" y="50">?</text>
+        <text x="210" y="98">?</text>
+        <text x="292" y="66">?</text>
+      </g>
     </svg>
   `;
 }

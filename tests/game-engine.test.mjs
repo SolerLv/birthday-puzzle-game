@@ -1,0 +1,97 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+
+import {
+  ACCESS_CARD_IDS,
+  LOCK_CODE,
+  VALID_RUNE_IDS,
+  createInitialState,
+  applyChoiceScores,
+  choosePrize,
+  getResultForState,
+  isAccessCodeSetValid,
+  isAccessCardSetValid,
+  isRuneEntranceValid,
+  isLockCodeValid,
+  serializeState,
+  deserializeState
+} from '../src/game-engine.js';
+
+test('validates the forbidden-section clue cards without relying on visible input answers', () => {
+  assert.equal(isAccessCardSetValid(['granger-note', 'otter-memory', 'serpent-seal']), true);
+  assert.equal(isAccessCardSetValid(['granger-note', 'otter-memory', 'phoenix-ash']), false);
+  assert.equal(isAccessCardSetValid([ACCESS_CARD_IDS[0], ACCESS_CARD_IDS[1]]), false);
+});
+
+test('keeps legacy access-code validation available for old saved sessions only', () => {
+  assert.equal(isAccessCodeSetValid(['granger', ' OTTER ', 'Serpent']), true);
+});
+
+test('applies hidden preference scores without exposing prize names', () => {
+  const state = createInitialState();
+
+  applyChoiceScores(state, ['style', 'luxury', 'luxury']);
+  applyChoiceScores(state, ['memory']);
+
+  assert.equal(state.scores.style, 1);
+  assert.equal(state.scores.luxury, 2);
+  assert.equal(state.scores.memory, 1);
+  assert.equal(Object.hasOwn(state.scores, 'displayName'), false);
+});
+
+test('maps luxury and style preference to a sunglasses seal', () => {
+  const state = createInitialState();
+  state.scores.style = 3;
+  state.scores.luxury = 3;
+
+  const prize = choosePrize(state);
+
+  assert.equal(['S-01', 'S-02'].includes(prize.envelopeCode), true);
+  assert.equal(prize.resultCopy.includes(prize.displayName), false);
+});
+
+test('allows multiple rune entrances to continue the logic stage', () => {
+  assert.equal(VALID_RUNE_IDS.length >= 3, true);
+  assert.equal(isRuneEntranceValid('serpent-quill'), true);
+  assert.equal(isRuneEntranceValid('mirror-serpent'), true);
+  assert.equal(isRuneEntranceValid('moon-owl'), false);
+});
+
+test('uses a configurable five-digit chamber lock code', () => {
+  assert.equal(LOCK_CODE.length, 5);
+  assert.equal(isLockCodeValid(LOCK_CODE), true);
+  assert.equal(isLockCodeValid('724'), false);
+});
+
+test('uses birthday-like tie priority when scores are even', () => {
+  const state = createInitialState();
+  state.scores.memory = 2;
+  state.scores.cash = 2;
+  state.scores.style = 2;
+  state.scores.luxury = 2;
+
+  assert.equal(choosePrize(state).envelopeCode, 'S-01');
+});
+
+test('returns only the seal code and blessing text for the public result', () => {
+  const state = createInitialState();
+  state.scores.cash = 5;
+
+  const result = getResultForState(state);
+
+  assert.equal(result.envelopeCode, 'S-05');
+  assert.equal(result.publicText.includes('微信红包'), false);
+  assert.equal(result.publicText.includes('1314'), false);
+});
+
+test('round-trips game state for refresh recovery', () => {
+  const state = createInitialState();
+  state.stage = 'potion';
+  state.completedStages = ['access', 'logic'];
+  state.scores.care = 2;
+  state.selectedLogicPath = 'silver-cloak';
+
+  const restored = deserializeState(serializeState(state));
+
+  assert.deepEqual(restored, state);
+});

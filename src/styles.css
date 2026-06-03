@@ -1,0 +1,616 @@
+:root {
+  color-scheme: dark;
+  --ink: #f7f0dc;
+  --muted: #c8c2b0;
+  --green: #0c2b25;
+  --green-2: #17463a;
+  --silver: #d9d5c5;
+  --gold: #b69b5e;
+  --wine: #6e2638;
+  --paper: #ece0c5;
+  --paper-ink: #24342f;
+  --shadow: rgba(0, 0, 0, 0.38);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background: #071714;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  color: var(--ink);
+  font-family: "Iowan Old Style", "Palatino Linotype", "Microsoft YaHei", serif;
+  background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 30px),
+    linear-gradient(135deg, #071714 0%, #0e3029 38%, #251421 72%, #3a2a16 100%);
+}
+
+.shell::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    linear-gradient(90deg, rgba(7, 23, 20, 0.76), rgba(7, 23, 20, 0.38), rgba(37, 20, 33, 0.78)),
+    var(--scene-image) center / cover no-repeat;
+  filter: saturate(0.82) contrast(1.08);
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 30px),
+    linear-gradient(135deg, rgba(7, 23, 20, 0.92), rgba(14, 48, 41, 0.72) 38%, rgba(37, 20, 33, 0.72) 72%, rgba(58, 42, 22, 0.86) 100%);
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.shell {
+  width: min(100%, 980px);
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 18px;
+  display: grid;
+  grid-template-columns: minmax(180px, 280px) minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+  position: relative;
+}
+
+.crest {
+  display: grid;
+  place-items: center;
+  min-height: 420px;
+}
+
+.crest svg {
+  width: min(72vw, 260px);
+  filter: drop-shadow(0 18px 32px var(--shadow));
+}
+
+.game-panel {
+  min-height: min(760px, calc(100vh - 36px));
+  padding: 18px;
+  border: 1px solid rgba(217, 213, 197, 0.28);
+  border-radius: 8px;
+  background:
+    linear-gradient(rgba(12, 43, 37, 0.86), rgba(12, 43, 37, 0.9)),
+    repeating-linear-gradient(0deg, rgba(236, 224, 197, 0.06) 0 2px, transparent 2px 16px);
+  box-shadow: 0 22px 60px var(--shadow);
+}
+
+.progress {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.progress-step {
+  min-height: 34px;
+  padding: 7px 5px;
+  border: 1px solid rgba(217, 213, 197, 0.18);
+  border-radius: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+  display: grid;
+  place-items: center;
+}
+
+.progress-step.is-active {
+  color: var(--green);
+  background: var(--paper);
+  border-color: var(--gold);
+}
+
+.progress-step.is-done {
+  color: var(--silver);
+  border-color: rgba(182, 155, 94, 0.6);
+}
+
+.scene-header {
+  margin: 0 0 18px;
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  color: var(--gold);
+  font-size: 13px;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0 0 10px;
+  color: var(--ink);
+  font-size: 32px;
+  line-height: 1.15;
+  letter-spacing: 0;
+}
+
+p {
+  line-height: 1.65;
+}
+
+.scene-header p:last-child {
+  margin: 0;
+  color: var(--muted);
+}
+
+.access-form,
+.lock-form {
+  display: grid;
+  gap: 12px;
+}
+
+label {
+  display: grid;
+  gap: 6px;
+  color: var(--silver);
+}
+
+label span {
+  font-size: 14px;
+}
+
+input {
+  min-height: 48px;
+  width: 100%;
+  border: 1px solid rgba(217, 213, 197, 0.38);
+  border-radius: 6px;
+  padding: 10px 12px;
+  color: var(--paper-ink);
+  background: var(--paper);
+  text-transform: uppercase;
+}
+
+.choice-grid,
+.access-card-grid,
+.phrase-grid,
+.bottle-rack {
+  display: grid;
+  gap: 10px;
+}
+
+.access-card-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.clue-card {
+  min-height: 150px;
+  padding: 12px;
+  border: 1px solid rgba(217, 213, 197, 0.28);
+  border-radius: 8px;
+  color: var(--ink);
+  background:
+    linear-gradient(160deg, rgba(236, 224, 197, 0.13), rgba(20, 55, 45, 0.66)),
+    repeating-linear-gradient(45deg, transparent 0 8px, rgba(182, 155, 94, 0.08) 8px 10px);
+  text-align: left;
+}
+
+.clue-card.is-selected {
+  border-color: var(--gold);
+  background:
+    linear-gradient(160deg, rgba(236, 224, 197, 0.24), rgba(20, 55, 45, 0.72)),
+    repeating-linear-gradient(45deg, transparent 0 8px, rgba(182, 155, 94, 0.16) 8px 10px);
+}
+
+.clue-symbol {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  aspect-ratio: 1;
+  margin-bottom: 10px;
+  border: 1px solid var(--gold);
+  border-radius: 50%;
+  color: var(--paper);
+  font-family: Georgia, serif;
+}
+
+.clue-card strong,
+.clue-card small {
+  display: block;
+}
+
+.clue-card small {
+  margin-top: 7px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.choice-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-bottom: 16px;
+}
+
+.phrase-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 14px 0;
+}
+
+.choice-card,
+.bottle,
+.rune {
+  border: 1px solid rgba(217, 213, 197, 0.26);
+  border-radius: 8px;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.06);
+  transition: border-color 120ms ease, background 120ms ease, transform 120ms ease;
+}
+
+.choice-card {
+  min-height: 118px;
+  padding: 13px;
+  text-align: left;
+}
+
+.choice-card strong,
+.bottle strong {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--paper);
+  font-size: 17px;
+}
+
+.choice-card span,
+.bottle small {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.choice-card.is-selected,
+.bottle.is-selected,
+.rune.is-selected {
+  border-color: var(--gold);
+  background: rgba(182, 155, 94, 0.2);
+  transform: translateY(-1px);
+}
+
+.rune-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.rune {
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  padding: 8px;
+  overflow: hidden;
+}
+
+.rune::before {
+  content: "";
+  position: absolute;
+}
+
+.rune-mark {
+  display: grid;
+  place-items: center;
+  width: 58%;
+  aspect-ratio: 1;
+  border: 1px solid rgba(217, 213, 197, 0.18);
+  border-radius: 50%;
+  color: var(--silver);
+  background:
+    radial-gradient(circle at 35% 30%, rgba(247, 240, 220, 0.18), transparent 34%),
+    rgba(0, 0, 0, 0.18);
+  font-size: 28px;
+  line-height: 1;
+}
+
+.rune strong {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.rune.has-entrance .rune-mark {
+  border-color: rgba(182, 155, 94, 0.8);
+  box-shadow: inset 0 0 18px rgba(182, 155, 94, 0.2);
+}
+
+.bottle-rack {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.bottle {
+  min-height: 188px;
+  padding: 14px 12px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.bottle::after {
+  content: "";
+  position: absolute;
+  inset: auto 18px 12px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(217, 213, 197, 0.42), transparent);
+}
+
+.bottle-icon {
+  display: block;
+  width: 54px;
+  height: 78px;
+  margin: 0 auto 8px;
+  border: 2px solid rgba(217, 213, 197, 0.78);
+  border-radius: 10px 10px 20px 20px;
+  background:
+    linear-gradient(180deg, transparent 0 20%, rgba(182, 155, 94, 0.78) 20% 100%),
+    radial-gradient(circle at 38% 36%, rgba(247, 240, 220, 0.58), transparent 18%);
+  box-shadow: inset 0 0 18px rgba(255, 255, 255, 0.14), 0 12px 20px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.bottle-icon::before {
+  content: "";
+  position: absolute;
+  left: 17px;
+  top: -18px;
+  width: 18px;
+  height: 20px;
+  border: 2px solid rgba(217, 213, 197, 0.78);
+  border-bottom: 0;
+  border-radius: 6px 6px 0 0;
+  background: rgba(12, 43, 37, 0.8);
+}
+
+.bottle-icon i {
+  position: absolute;
+  left: 9px;
+  right: 9px;
+  bottom: 10px;
+  height: 36px;
+  border-radius: 50% 50% 18px 18px;
+  background: linear-gradient(180deg, rgba(247, 240, 220, 0.25), rgba(23, 70, 58, 0.1));
+  animation: potion-glow 2400ms ease-in-out infinite;
+}
+
+.action-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.primary-button,
+.secondary-button,
+.ghost-button {
+  min-height: 46px;
+  border-radius: 6px;
+  padding: 10px 14px;
+  border: 1px solid transparent;
+}
+
+.primary-button {
+  width: 100%;
+  color: #10251f;
+  background: var(--paper);
+  border-color: var(--gold);
+}
+
+.secondary-button,
+.ghost-button {
+  color: var(--silver);
+  background: transparent;
+  border-color: rgba(217, 213, 197, 0.28);
+}
+
+.ghost-button {
+  margin-top: 12px;
+}
+
+.counter,
+.feedback,
+.quiet-note {
+  color: var(--muted);
+}
+
+.feedback {
+  padding: 10px 12px;
+  border-left: 3px solid var(--gold);
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.lock-visual {
+  padding: 10px;
+  border: 1px solid rgba(217, 213, 197, 0.2);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.14);
+}
+
+.lock-visual svg {
+  width: 100%;
+  display: block;
+}
+
+.seal {
+  display: grid;
+  place-items: center;
+  min-height: 230px;
+  border: 1px solid var(--gold);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(236, 224, 197, 0.94), rgba(208, 190, 142, 0.94)),
+    repeating-linear-gradient(45deg, transparent 0 12px, rgba(110, 38, 56, 0.12) 12px 14px);
+  color: var(--paper-ink);
+  text-align: center;
+}
+
+.seal span {
+  font-size: 15px;
+}
+
+.seal strong {
+  font-size: 58px;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.transition {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(3, 10, 8, 0.68);
+  backdrop-filter: blur(8px);
+}
+
+.transition p {
+  margin: 18px 0 0;
+  color: var(--paper);
+  text-align: center;
+}
+
+.transition-stage {
+  width: min(260px, 78vw);
+  height: 170px;
+  position: relative;
+}
+
+.transition-stage span {
+  position: absolute;
+  display: block;
+  border: 2px solid rgba(217, 213, 197, 0.72);
+  background: rgba(20, 70, 58, 0.82);
+  box-shadow: 0 0 28px rgba(182, 155, 94, 0.32);
+}
+
+.transition-stage span:nth-child(1) {
+  left: 18px;
+  top: 42px;
+  width: 68px;
+  height: 96px;
+  border-radius: 10px 10px 24px 24px;
+  animation: bottle-pour-left 1200ms ease both;
+}
+
+.transition-stage span:nth-child(2) {
+  left: 104px;
+  top: 82px;
+  width: 96px;
+  height: 64px;
+  border-radius: 50% 50% 18px 18px;
+  animation: cauldron-glow 1200ms ease both;
+}
+
+.transition-stage span:nth-child(3) {
+  right: 18px;
+  top: 42px;
+  width: 68px;
+  height: 96px;
+  border-radius: 10px 10px 24px 24px;
+  animation: bottle-pour-right 1200ms ease both;
+}
+
+.transition.access .transition-stage span,
+.transition.logic .transition-stage span,
+.transition.lock .transition-stage span {
+  border-radius: 50%;
+  animation: sigil-rise 1200ms ease both;
+}
+
+@keyframes potion-glow {
+  0%, 100% { opacity: 0.55; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(-3px); }
+}
+
+@keyframes bottle-pour-left {
+  0% { transform: rotate(0deg); }
+  70%, 100% { transform: rotate(-24deg) translate(-10px, 0); }
+}
+
+@keyframes bottle-pour-right {
+  0% { transform: rotate(0deg); }
+  70%, 100% { transform: rotate(24deg) translate(10px, 0); }
+}
+
+@keyframes cauldron-glow {
+  0% { box-shadow: 0 0 0 rgba(182, 155, 94, 0); }
+  100% { box-shadow: 0 0 64px rgba(182, 155, 94, 0.62); }
+}
+
+@keyframes sigil-rise {
+  0% { opacity: 0; transform: translateY(28px) scale(0.8); }
+  100% { opacity: 1; transform: translateY(-12px) scale(1.08); }
+}
+
+@media (max-width: 760px) {
+  .shell {
+    grid-template-columns: 1fr;
+    padding: 12px;
+    align-items: start;
+  }
+
+  .crest {
+    min-height: 120px;
+  }
+
+  .crest svg {
+    width: 120px;
+  }
+
+  .game-panel {
+    min-height: auto;
+    padding: 14px;
+  }
+
+  .progress {
+    grid-template-columns: repeat(5, minmax(48px, 1fr));
+    overflow-x: auto;
+  }
+
+  h1 {
+    font-size: 28px;
+  }
+
+  .choice-grid,
+  .access-card-grid,
+  .phrase-grid,
+  .bottle-rack {
+    grid-template-columns: 1fr;
+  }
+
+  .choice-card,
+  .bottle {
+    min-height: 104px;
+  }
+
+  .seal strong {
+    font-size: 50px;
+  }
+
+  .rune-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .rune {
+    padding: 6px;
+  }
+
+  .rune-mark {
+    font-size: 22px;
+  }
+}

@@ -25,6 +25,25 @@ import {
   deserializeState
 } from '../src/game-engine.js';
 
+test('starts new games on the personalized welcome stage', () => {
+  const state = createInitialState();
+
+  assert.equal(state.stage, 'welcome');
+});
+
+test('keeps existing saved puzzle stages when restoring progress', () => {
+  const saved = {
+    ...createInitialState(),
+    stage: 'access',
+    selectedAccessCards: ['granger-note']
+  };
+
+  const restored = deserializeState(JSON.stringify(saved));
+
+  assert.equal(restored.stage, 'access');
+  assert.deepEqual(restored.selectedAccessCards, ['granger-note']);
+});
+
 test('validates the forbidden-section clue cards without relying on visible input answers', () => {
   assert.equal(isAccessCardSetValid(['granger-note', 'otter-memory', 'serpent-seal']), true);
   assert.equal(isAccessCardSetValid(['granger-note', 'otter-memory', 'phoenix-ash']), false);

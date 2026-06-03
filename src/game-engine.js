@@ -17,7 +17,7 @@ const TIE_PRIORITY = [
 
 export function createInitialState() {
   return {
-    stage: 'access',
+    stage: 'welcome',
     completedStages: [],
     scores: Object.fromEntries(SCORE_KEYS.map((key) => [key, 0])),
     selectedAccessCards: [],

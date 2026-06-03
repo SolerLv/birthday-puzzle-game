@@ -30,6 +30,7 @@ function render(feedback = '') {
   saveState();
 
   const body = {
+    welcome: renderWelcome,
     access: renderAccess,
     logic: renderLogic,
     potion: renderPotion,
@@ -56,6 +57,10 @@ function render(feedback = '') {
 }
 
 function renderProgress() {
+  if (state.stage === 'welcome') {
+    return '';
+  }
+
   const stages = [
     ['access', '禁书区'],
     ['logic', '逻辑笔记'],
@@ -74,6 +79,24 @@ function renderProgress() {
         })
         .join('')}
     </nav>
+  `;
+}
+
+function renderWelcome() {
+  return `
+    <section class="welcome-card" aria-label="夏颖专属试炼邀请">
+      <p class="eyebrow">Slytherin Chamber Trial</p>
+      <h1>斯莱特林密室试炼</h1>
+      <p class="welcome-exclusive">夏颖专属</p>
+
+      <div class="welcome-seal" aria-label="制作者署名">
+        <span>策划与制作</span>
+        <strong>爱你的小吕宝</strong>
+      </div>
+
+      <p class="welcome-copy">今晚的线索、封印和命运编号，都已经为你悄悄布置好。点亮银蛇徽记，试炼就会正式开始。</p>
+      <button class="primary-button welcome-button" data-action="start-game">进入试炼</button>
+    </section>
   `;
 }
 
@@ -238,6 +261,11 @@ function bindGlobalActions() {
 function handleAction(event) {
   const action = event.currentTarget.dataset.action;
   const id = event.currentTarget.dataset.id;
+
+  if (action === 'start-game') {
+    state.stage = 'access';
+    render();
+  }
 
   if (action === 'logic-path') {
     state.selectedLogicPath = id;

@@ -81,12 +81,17 @@ export const PRIZES = [
 ];
 
 export const VISUAL_ASSETS = {
-  greatHall: {
-    title: 'Great Hall of Hogwarts in Hogwarts Legacy',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Great_Hall_of_Hogwarts_in_Hogwarts_Legacy.jpg/1280px-Great_Hall_of_Hogwarts_in_Hogwarts_Legacy.jpg',
-    sourceUrl: 'https://commons.wikimedia.org/wiki/File:Great_Hall_of_Hogwarts_in_Hogwarts_Legacy.jpg',
-    attribution: 'Hogwarts Legacy, CC BY 3.0, via Wikimedia Commons'
-  }
+  textures: {
+    parchment: './artifacts/parchment-texture.svg',
+    velvet: './artifacts/velvet-noise.svg'
+  },
+  ambience: [
+    { stage: 'access', title: '禁书区书廊', imageUrl: './artifacts/scene-forbidden-library.svg' },
+    { stage: 'logic', title: '赫敏的羊皮纸笔记', imageUrl: './artifacts/scene-logic-notebook.svg' },
+    { stage: 'potion', title: '湖底公共休息室药剂架', imageUrl: './artifacts/scene-common-room.svg' },
+    { stage: 'lock', title: '密室蛇形门锁', imageUrl: './artifacts/scene-chamber-door.svg' },
+    { stage: 'result', title: '最终封印桌面', imageUrl: './artifacts/scene-seal-table.svg' }
+  ]
 };
 
 export const ACCESS_CARDS = [
@@ -95,6 +100,8 @@ export const ACCESS_CARDS = [
     title: '赫敏的页角批注',
     symbol: 'HG',
     type: 'seal',
+    artifact: 'quill-note',
+    tone: '#c8d7cf',
     visibleText: '逻辑先于勇气，页边的字永远不会骗人。',
     isKey: true
   },
@@ -103,6 +110,8 @@ export const ACCESS_CARDS = [
     title: '水獭形记忆',
     symbol: 'OT',
     type: 'memory',
+    artifact: 'silver-ripple',
+    tone: '#9fd0d0',
     visibleText: '银色水痕绕过禁书区的门缝。',
     isKey: true
   },
@@ -111,6 +120,8 @@ export const ACCESS_CARDS = [
     title: '银蛇封蜡',
     symbol: 'SS',
     type: 'house',
+    artifact: 'serpent-wax',
+    tone: '#72b08f',
     visibleText: '只有蛇影知道哪扇门愿意打开。',
     isKey: true
   },
@@ -119,6 +130,8 @@ export const ACCESS_CARDS = [
     title: '凤凰灰烬',
     symbol: 'PX',
     type: 'decoy',
+    artifact: 'ash-feather',
+    tone: '#cf7b57',
     visibleText: '会重燃，但不属于这扇门。'
   },
   {
@@ -126,6 +139,8 @@ export const ACCESS_CARDS = [
     title: '鹿角足迹',
     symbol: 'ST',
     type: 'decoy',
+    artifact: 'stag-track',
+    tone: '#d9c28c',
     visibleText: '很英勇，也很容易把巡夜人引来。'
   },
   {
@@ -133,6 +148,8 @@ export const ACCESS_CARDS = [
     title: '月光墨迹',
     symbol: 'MI',
     type: 'decoy',
+    artifact: 'moon-ink',
+    tone: '#aeb8d8',
     visibleText: '适合写信，不适合开锁。'
   },
   {
@@ -140,6 +157,8 @@ export const ACCESS_CARDS = [
     title: '旧铜钥匙',
     symbol: 'BK',
     type: 'decoy',
+    artifact: 'bronze-key',
+    tone: '#b27a45',
     visibleText: '看起来像钥匙，正因为如此才可疑。'
   },
   {
@@ -147,6 +166,8 @@ export const ACCESS_CARDS = [
     title: '湖绿色缎带',
     symbol: 'GR',
     type: 'decoy',
+    artifact: 'green-ribbon',
+    tone: '#3f9c78',
     visibleText: '颜色正确，但没有留下推理痕迹。'
   },
   {
@@ -154,6 +175,8 @@ export const ACCESS_CARDS = [
     title: '禁书灰尘',
     symbol: 'LD',
     type: 'hint',
+    artifact: 'library-dust',
+    tone: '#b9a56c',
     visibleText: '真正的通行组合里，会同时有她、守护与学院。'
   }
 ];
@@ -188,43 +211,49 @@ export const LOGIC_PATHS = [
 ];
 
 export const RUNE_CELLS = [
-  { id: 'moon-owl', label: '月鸮', glyph: '☾', hint: '月鸮负责观察，不负责开门。' },
-  { id: 'thorn', label: '荆棘', glyph: '♆', hint: '有防护，却没有羽毛的痕迹。' },
-  { id: 'mirror', label: '镜湖', glyph: '◇', hint: '只反射答案，不保存答案。' },
-  { id: 'quill', label: '羽笔', glyph: '✒', hint: '羽笔在旁边，但还缺少蛇影。' },
+  { id: 'moon-owl', label: '月鸮', glyph: '☾', artifact: 'owl', constellation: '#9fb8d0', hint: '月鸮负责观察，不负责开门。' },
+  { id: 'thorn', label: '荆棘', glyph: '♆', artifact: 'thorn', constellation: '#708f78', hint: '有防护，却没有羽毛的痕迹。' },
+  { id: 'mirror', label: '镜湖', glyph: '◇', artifact: 'mirror', constellation: '#b9c7d7', hint: '只反射答案，不保存答案。' },
+  { id: 'quill', label: '羽笔', glyph: '✒', artifact: 'quill', constellation: '#d7c39a', hint: '羽笔在旁边，但还缺少蛇影。' },
   {
     id: 'serpent-quill',
     label: '蛇羽',
     glyph: 'ϟ',
+    artifact: 'serpent-quill',
+    constellation: '#d7c39a',
     hint: '蛇影与羽毛在这里相遇。',
     isEntrance: true,
     scoreTags: ['style', 'luxury']
   },
-  { id: 'coin', label: '金纹', glyph: '◎', hint: '金纹靠近金库，却不是本关钥匙。' },
-  { id: 'star', label: '星尘', glyph: '✦', hint: '太亮，会暴露密室门。' },
-  { id: 'fern', label: '银蕨', glyph: '⌘', hint: '它负责隐藏路径，不负责开门。' },
-  { id: 'vial', label: '药瓶', glyph: '⚗', hint: '这是下一关的东西。' },
+  { id: 'coin', label: '金纹', glyph: '◎', artifact: 'coin', constellation: '#cba85d', hint: '金纹靠近金库，却不是本关钥匙。' },
+  { id: 'star', label: '星尘', glyph: '✦', artifact: 'star', constellation: '#e6d9a8', hint: '太亮，会暴露密室门。' },
+  { id: 'fern', label: '银蕨', glyph: '⌘', artifact: 'fern', constellation: '#8fb79e', hint: '它负责隐藏路径，不负责开门。' },
+  { id: 'vial', label: '药瓶', glyph: '⚗', artifact: 'vial', constellation: '#95c0a8', hint: '这是下一关的东西。' },
   {
     id: 'mirror-serpent',
     label: '镜蛇',
     glyph: '◈',
+    artifact: 'mirror-serpent',
+    constellation: '#b8d3cf',
     hint: '镜面里的蛇影也能找到门缝。',
     isEntrance: true,
     scoreTags: ['classic', 'luxury']
   },
-  { id: 'book-latch', label: '书扣', glyph: '▣', hint: '书扣锁住的是旧知识，不是密室入口。' },
-  { id: 'silver-flame', label: '银焰', glyph: '♨', hint: '火焰会暴露你，但能照亮下一条提示。' },
+  { id: 'book-latch', label: '书扣', glyph: '▣', artifact: 'latch', constellation: '#9b7c56', hint: '书扣锁住的是旧知识，不是密室入口。' },
+  { id: 'silver-flame', label: '银焰', glyph: '♨', artifact: 'flame', constellation: '#c7d8d2', hint: '火焰会暴露你，但能照亮下一条提示。' },
   {
     id: 'memory-lantern',
     label: '忆灯',
     glyph: '✧',
+    artifact: 'lantern',
+    constellation: '#d9c48f',
     hint: '它保存今天的光，也能成为一条入口。',
     isEntrance: true,
     scoreTags: ['memory', 'romance']
   },
-  { id: 'vault-line', label: '库线', glyph: '⌁', hint: '这条线通向金库，不通向笔记页。' },
-  { id: 'emerald-drop', label: '翠滴', glyph: '●', hint: '颜色太纯，反而不像赫敏会信的证据。' },
-  { id: 'quiet-root', label: '静根', glyph: '♧', hint: '静根藏得很好，但没有回应羽笔。' }
+  { id: 'vault-line', label: '库线', glyph: '⌁', artifact: 'vault', constellation: '#d8b968', hint: '这条线通向金库，不通向笔记页。' },
+  { id: 'emerald-drop', label: '翠滴', glyph: '●', artifact: 'emerald', constellation: '#4fc08f', hint: '颜色太纯，反而不像赫敏会信的证据。' },
+  { id: 'quiet-root', label: '静根', glyph: '♧', artifact: 'root', constellation: '#7e9c78', hint: '静根藏得很好，但没有回应羽笔。' }
 ];
 
 export const CORRECT_RUNE_ID = 'serpent-quill';
@@ -234,48 +263,64 @@ export const POTION_BOTTLES = [
   {
     id: 'mirror-silver',
     title: '镜湖与银框',
+    artifact: 'faceted',
+    liquid: ['#dbe7e4', '#7ba99b'],
     visibleText: '一滴能让目光更锋利的银色药液。',
     scoreTags: ['style', 'luxury']
   },
   {
     id: 'old-house',
     title: '古典学院',
+    artifact: 'apothecary',
+    liquid: ['#5a2736', '#b59b65'],
     visibleText: '来自旧书页边缘的深色粉末。',
     scoreTags: ['style', 'luxury', 'classic']
   },
   {
     id: 'travel-step',
     title: '远行鞋印',
+    artifact: 'round',
+    liquid: ['#6b8d79', '#d4bd85'],
     visibleText: '只在准备出发时才会发亮的砂粒。',
     scoreTags: ['style', 'practical', 'comfort']
   },
   {
     id: 'frozen-frame',
     title: '定格咒',
+    artifact: 'tall',
+    liquid: ['#8fb6cc', '#eee0b6'],
     visibleText: '能把一个笑容留到很久以后的光。',
     scoreTags: ['memory']
   },
   {
     id: 'vault-whisper',
     title: '金库密语',
+    artifact: 'cut-crystal',
+    liquid: ['#c9a24c', '#6a402c'],
     visibleText: '说出口之前，数字已经替它心动。',
     scoreTags: ['cash', 'romance']
   },
   {
     id: 'soft-vine',
     title: '舒缓藤蔓',
+    artifact: 'vine',
+    liquid: ['#79a987', '#214f3f'],
     visibleText: '贴近疲惫处时，会变得很安静。',
     scoreTags: ['care', 'body', 'neck']
   },
   {
     id: 'moon-rest',
     title: '柔光月息',
+    artifact: 'moon',
+    liquid: ['#d7d2e9', '#6d88a4'],
     visibleText: '专门照顾熬夜后那一点点酸涩。',
     scoreTags: ['care', 'eye']
   },
   {
     id: 'morning-dew',
     title: '晨露果香',
+    artifact: 'wide',
+    liquid: ['#f1c06d', '#7ca77b'],
     visibleText: '把清晨压成一杯明亮的颜色。',
     scoreTags: ['home']
   }

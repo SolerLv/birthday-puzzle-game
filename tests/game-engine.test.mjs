@@ -2,6 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import {
+  ACCESS_CARDS,
+  POTION_BOTTLES,
+  RUNE_CELLS,
+  VISUAL_ASSETS
+} from '../src/game-data.js';
+import {
   ACCESS_CARD_IDS,
   LOCK_CODE,
   VALID_RUNE_IDS,
@@ -55,6 +61,15 @@ test('allows multiple rune entrances to continue the logic stage', () => {
   assert.equal(isRuneEntranceValid('serpent-quill'), true);
   assert.equal(isRuneEntranceValid('mirror-serpent'), true);
   assert.equal(isRuneEntranceValid('moon-owl'), false);
+});
+
+test('provides rich local visual assets for clue cards, runes, potions, and ambience', () => {
+  assert.equal(VISUAL_ASSETS.ambience.length >= 3, true);
+  assert.equal(VISUAL_ASSETS.textures.parchment.startsWith('./artifacts/'), true);
+
+  assert.equal(ACCESS_CARDS.every((card) => card.artifact && card.tone), true);
+  assert.equal(RUNE_CELLS.every((cell) => cell.artifact && cell.constellation), true);
+  assert.equal(POTION_BOTTLES.every((bottle) => bottle.artifact && bottle.liquid), true);
 });
 
 test('uses a configurable five-digit chamber lock code', () => {

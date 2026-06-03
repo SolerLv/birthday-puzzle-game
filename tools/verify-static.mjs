@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 
+import { VISUAL_ASSETS } from '../src/game-data.js';
 import { createInitialState, getResultForState } from '../src/game-engine.js';
 
 const baseUrl = process.env.PUZZLE_BASE_URL ?? 'http://127.0.0.1:4173';
@@ -31,13 +32,20 @@ assert.match(dataJs, /Expecto Patronum/);
 assert.match(engineJs, /choosePrize/);
 assert.match(await fetchText('/.nojekyll'), /^/);
 
+const assetPaths = [
+  ...Object.values(VISUAL_ASSETS.textures),
+  ...VISUAL_ASSETS.ambience.map((asset) => asset.imageUrl)
+].map((assetPath) => assetPath.replace(/^\./, ''));
+
+await Promise.all(assetPaths.map((assetPath) => fetchText(assetPath)));
+
 const publicResult = getResultForState(createInitialState());
 assert.equal(/S-0[1-9]/.test(publicResult.envelopeCode), true);
 assert.equal(prizeLeakPattern.test(publicResult.publicText), false);
 
 console.log(JSON.stringify({
   ok: true,
-  checked: ['app shell', 'css', 'js modules', 'public result copy'],
+  checked: ['app shell', 'css', 'js modules', 'local visual assets', 'public result copy'],
   baseUrl
 }, null, 2));
 

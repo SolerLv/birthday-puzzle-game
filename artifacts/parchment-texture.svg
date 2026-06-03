@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 900">
+  <filter id="paper">
+    <feTurbulence type="fractalNoise" baseFrequency=".018 .032" numOctaves="4" seed="21"/>
+    <feColorMatrix type="matrix" values=".55 0 0 0 .38 0 .48 0 0 .31 0 0 .32 0 .2 0 0 0 .28 0"/>
+  </filter>
+  <rect width="900" height="900" fill="#eadfc1"/>
+  <rect width="900" height="900" filter="url(#paper)" opacity=".62"/>
+  <g fill="none" stroke="#8b7048" stroke-opacity=".13" stroke-width="2">
+    <path d="M0 112c210 44 391-50 900 8"/>
+    <path d="M0 442c253 35 490-42 900 26"/>
+    <path d="M0 755c311-30 505 54 900-8"/>
+  </g>
+</svg>

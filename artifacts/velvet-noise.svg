@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 900">
+  <filter id="velvet">
+    <feTurbulence type="fractalNoise" baseFrequency=".011 .026" numOctaves="5" seed="39"/>
+    <feColorMatrix type="saturate" values=".55"/>
+  </filter>
+  <rect width="900" height="900" fill="#061915"/>
+  <rect width="900" height="900" filter="url(#velvet)" opacity=".18"/>
+  <radialGradient id="shine" cx=".34" cy=".18" r=".8">
+    <stop offset="0" stop-color="#6aa88d" stop-opacity=".34"/>
+    <stop offset=".48" stop-color="#173b31" stop-opacity=".08"/>
+    <stop offset="1" stop-color="#020706" stop-opacity=".76"/>
+  </radialGradient>
+  <rect width="900" height="900" fill="url(#shine)"/>
+</svg>

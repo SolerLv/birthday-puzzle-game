@@ -38,8 +38,10 @@ function render(feedback = '') {
     result: renderResult
   }[state.stage] ?? renderAccess;
 
+  const scene = getSceneAsset(state.stage);
+
   app.innerHTML = `
-    <main class="shell" style="--scene-image: url('${VISUAL_ASSETS.greatHall.imageUrl}')">
+    <main class="shell stage-${state.stage}" style="--scene-image: url('${scene.imageUrl}')">
       <section class="crest" aria-label="银蛇与羽笔封印">
         ${renderCrestSvg()}
       </section>
@@ -87,8 +89,8 @@ function renderAccess(feedback) {
     <section class="access-card-grid" aria-label="禁书区线索牌">
       ${ACCESS_CARDS.map(
         (card) => `
-        <button class="clue-card ${state.selectedAccessCards.includes(card.id) ? 'is-selected' : ''}" data-action="access-card" data-id="${card.id}">
-          <span class="clue-symbol">${card.symbol}</span>
+        <button class="clue-card ${state.selectedAccessCards.includes(card.id) ? 'is-selected' : ''}" style="--accent: ${card.tone}" data-action="access-card" data-id="${card.id}">
+          <span class="clue-artifact artifact-${card.artifact}" aria-hidden="true">${renderClueArtifact(card)}</span>
           <strong>${card.title}</strong>
           <small>${card.visibleText}</small>
         </button>
@@ -127,7 +129,8 @@ function renderLogic(feedback) {
     <section class="rune-grid" aria-label="符文九宫格">
       ${RUNE_CELLS.map(
         (cell) => `
-        <button class="rune ${cell.isEntrance ? 'has-entrance' : ''} ${state.selectedRune === cell.id ? 'is-selected' : ''}" data-action="rune" data-id="${cell.id}" aria-label="${cell.label}">
+        <button class="rune artifact-${cell.artifact} ${cell.isEntrance ? 'has-entrance' : ''} ${state.selectedRune === cell.id ? 'is-selected' : ''}" style="--rune-color: ${cell.constellation}" data-action="rune" data-id="${cell.id}" aria-label="${cell.label}">
+          <span class="rune-aura" aria-hidden="true"></span>
           <span class="rune-mark">${cell.glyph}</span>
           <strong>${cell.label}</strong>
         </button>
@@ -154,8 +157,8 @@ function renderPotion(feedback) {
     <section class="bottle-rack" aria-label="药剂瓶">
       ${POTION_BOTTLES.map(
         (bottle) => `
-        <button class="bottle ${state.selectedPotionBottles.includes(bottle.id) ? 'is-selected' : ''}" data-action="bottle" data-id="${bottle.id}">
-          <span class="bottle-icon"><i></i></span>
+        <button class="bottle bottle-${bottle.artifact} ${state.selectedPotionBottles.includes(bottle.id) ? 'is-selected' : ''}" style="--liquid-a: ${bottle.liquid[0]}; --liquid-b: ${bottle.liquid[1]}" data-action="bottle" data-id="${bottle.id}">
+          ${renderBottleIllustration(bottle)}
           <strong>${bottle.title}</strong>
           <small>${bottle.visibleText}</small>
         </button>
@@ -399,8 +402,8 @@ function renderTransition() {
 
   return `
     <section class="transition ${transition}" aria-live="polite">
-      <div class="transition-stage">
-        <span></span><span></span><span></span>
+      <div class="transition-stage" aria-hidden="true">
+        ${renderTransitionStage(transition)}
       </div>
       <p>${labels[transition]}</p>
     </section>
@@ -423,7 +426,7 @@ function runEnhancedTransition(type) {
     return;
   }
 
-  const nodes = [...document.querySelectorAll('.transition-stage span')];
+  const nodes = [...document.querySelectorAll('.transition-stage span, .transition-stage i, .transition-stage b')];
   const label = document.querySelector('.transition p');
   const timeline = gsap.timeline();
 
@@ -462,6 +465,10 @@ function runEnhancedTransition(type) {
   timeline.fromTo(label, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.28 }, 0.18);
 }
 
+function getSceneAsset(stage) {
+  return VISUAL_ASSETS.ambience.find((asset) => asset.stage === stage) ?? VISUAL_ASSETS.ambience[0];
+}
+
 function saveState() {
   localStorage.setItem(STORAGE_KEY, serializeState(state));
 }
@@ -487,6 +494,130 @@ function renderCrestSvg() {
       <path d="M79 161h82" stroke="#d6d0bd" stroke-width="3" stroke-linecap="round"/>
     </svg>
   `;
+}
+
+function renderClueArtifact(card) {
+  const motif = {
+    'quill-note': '<path d="M20 55c38-25 54-35 70-45-9 24-24 50-58 78" /><path d="M30 80h52" /><path d="M38 92h30" />',
+    'silver-ripple': '<path d="M15 66c20-18 38-18 58 0s38 18 58 0" /><path d="M26 82c14-10 28-10 42 0s28 10 42 0" /><circle cx="78" cy="45" r="11" />',
+    'serpent-wax': '<path d="M35 78c30 22 69 3 60-22-5-15-30-11-28 2 1 8 14 8 15 1" /><circle cx="83" cy="43" r="5" /><path d="M22 102h84" />',
+    'ash-feather': '<path d="M34 94c8-32 22-56 56-76-3 32-14 58-44 83" /><path d="M45 70h33M39 86h28" />',
+    'stag-track': '<path d="M33 77c6-18 13-27 24-36 0 18 0 34-7 48" /><path d="M84 77c-6-18-13-27-24-36 0 18 0 34 7 48" /><circle cx="58" cy="95" r="9" />',
+    'moon-ink': '<path d="M78 25c-23 8-31 33-18 51 8 12 23 17 37 12-20 19-55 7-62-20-7-26 14-49 43-43Z" /><path d="M42 102c18-10 36-10 54 0" />',
+    'bronze-key': '<circle cx="43" cy="55" r="18" /><path d="M61 55h52M94 55v18M106 55v12" />',
+    'green-ribbon': '<path d="M24 42c24-15 45 20 68 4 16-11 27-11 39-2" /><path d="M43 55 28 98M88 56l14 42" />',
+    'library-dust': '<path d="M28 82h88l-12 22H40Z" /><path d="M36 45h72M42 58h60M50 71h44" /><circle cx="32" cy="33" r="3" /><circle cx="99" cy="30" r="2" />'
+  }[card.artifact] ?? '<circle cx="70" cy="70" r="36" />';
+
+  return `
+    <svg viewBox="0 0 140 120" role="img" aria-label="${card.symbol}">
+      <g fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">${motif}</g>
+      <text x="18" y="24">${card.symbol}</text>
+    </svg>
+  `;
+}
+
+function renderBottleIllustration(bottle) {
+  const artwork = getBottleArtwork(bottle.artifact);
+
+  return `
+    <span class="bottle-illustration" aria-hidden="true">
+      <svg viewBox="0 0 96 132" role="img" aria-label="${bottle.title}">
+        <defs>
+          <linearGradient id="liquid-${bottle.id}" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0" stop-color="var(--liquid-a)" />
+            <stop offset="1" stop-color="var(--liquid-b)" />
+          </linearGradient>
+        </defs>
+        <path class="glass-neck" d="${artwork.body}" />
+        <path class="liquid" d="${artwork.liquid}" fill="url(#liquid-${bottle.id})" />
+        <path class="bottle-label" d="${artwork.label}" />
+        <path class="glass-shine" d="${artwork.shine}" />
+        <path class="cork" d="${artwork.cork}" />
+      </svg>
+      <i></i><i></i><i></i>
+    </span>
+  `;
+}
+
+function getBottleArtwork(artifact) {
+  const shared = {
+    shine: 'M34 47c-9 17-10 34-3 50',
+    cork: 'M35 6h26v13H35Z',
+    label: 'M32 77h32v24H32Z'
+  };
+
+  const variants = {
+    faceted: {
+      body: 'M38 10h20v29l20 30-9 46-21 11-21-11-9-46 20-30Z',
+      liquid: 'M26 82c16 7 32-7 48 0l-7 31-19 9-19-9Z',
+      label: 'M33 76h30l8 10-8 12H33l-8-12Z',
+      shine: 'M34 49c-8 15-9 32-3 47',
+      cork: shared.cork
+    },
+    apothecary: {
+      body: 'M39 8h18v30c0 8 17 14 24 34 10 30-6 50-33 50S5 102 15 72c7-20 24-26 24-34Z',
+      liquid: 'M20 80c19 9 37-8 56 0 4 24-9 38-28 38S16 104 20 80Z',
+      label: 'M32 79h32v23H32Z',
+      shine: 'M33 47c-11 18-12 35-3 52',
+      cork: 'M33 5h30v14H33Z'
+    },
+    round: {
+      body: 'M29 18h38v26c0 6 16 14 19 35 4 29-15 47-38 47S6 108 10 79c3-21 19-29 19-35Z',
+      liquid: 'M15 83c22 10 44-9 66 0 0 26-15 39-33 39S15 109 15 83Z',
+      label: 'M31 82h36v21H31Z',
+      shine: 'M30 51c-12 18-13 37-3 54',
+      cork: 'M30 9h36v14H30Z'
+    },
+    tall: {
+      body: 'M36 8h24v45c0 7 12 13 16 33 5 27-9 40-28 40S15 113 20 86c4-20 16-26 16-33Z',
+      liquid: 'M23 82c17 7 33-6 50 0 4 26-8 38-25 38S19 108 23 82Z',
+      label: 'M33 83h30v20H33Z',
+      shine: 'M35 55c-8 15-9 31-3 47',
+      cork: 'M33 4h30v14H33Z'
+    },
+    'cut-crystal': {
+      body: 'M39 12h18v27l27 28-10 49-26 10-26-10-10-49 27-28Z',
+      liquid: 'M22 84c18 8 38-8 56 0l-8 30-22 8-22-8Z',
+      label: 'M34 77h28l9 11-9 11H34l-9-11Z',
+      shine: 'M35 49c-7 14-8 32-2 48',
+      cork: 'M34 6h28v14H34Z'
+    },
+    vine: {
+      body: 'M37 8h22v31c0 8 20 19 22 40 4 30-12 45-33 45S11 109 15 79c2-21 22-32 22-40Z',
+      liquid: 'M20 82c18 7 37-7 56 0 3 25-10 37-28 37S17 107 20 82Z',
+      label: 'M31 78c12 9 24 9 36 0v23c-12 9-24 9-36 0Z',
+      shine: 'M33 48c-10 17-11 34-3 50',
+      cork: shared.cork
+    },
+    moon: {
+      body: 'M41 9h14v35c0 9 22 18 25 42 4 28-13 40-32 40S16 114 20 86c3-24 21-33 21-42Z',
+      liquid: 'M23 84c16 8 34-7 50 0 3 25-8 37-25 37S20 109 23 84Z',
+      label: 'M34 82a14 14 0 1 0 28 0 14 14 0 1 0-28 0',
+      shine: 'M36 54c-8 16-9 32-2 48',
+      cork: 'M34 5h28v13H34Z'
+    },
+    wide: {
+      body: 'M34 14h28v24c0 7 24 15 28 38 5 31-17 49-42 49S1 107 6 76c4-23 28-31 28-38Z',
+      liquid: 'M12 82c24 10 48-10 72 0 1 27-18 39-36 39S11 109 12 82Z',
+      label: 'M29 79h38v22H29Z',
+      shine: 'M28 49c-13 18-14 37-4 55',
+      cork: 'M31 7h34v14H31Z'
+    }
+  };
+
+  return variants[artifact] ?? { ...shared, body: variants.apothecary.body, liquid: variants.apothecary.liquid };
+}
+
+function renderTransitionStage(type) {
+  const stages = {
+    access: '<span class="book"></span><i class="wax"></i><b class="spark one"></b><b class="spark two"></b><b class="spark three"></b>',
+    logic: '<span class="page"></span><i class="rune-dot one"></i><i class="rune-dot two"></i><i class="rune-dot three"></i><b class="quill-line"></b>',
+    potion: '<span class="pour left"></span><span class="pour center"></span><span class="pour right"></span><span class="cup"></span><i class="mist one"></i><i class="mist two"></i><i class="mist three"></i>',
+    lock: '<span class="lock-disc"></span><i class="serpent-line"></i><b class="spark one"></b><b class="spark two"></b><b class="spark three"></b>'
+  };
+
+  return stages[type] ?? stages.access;
 }
 
 function renderSnakePathSvg() {

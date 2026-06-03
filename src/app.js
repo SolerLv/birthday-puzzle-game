@@ -82,7 +82,7 @@ function renderAccess(feedback) {
     <header class="scene-header">
       <p class="eyebrow">Restricted Section</p>
       <h1>禁书区入场</h1>
-      <p>从抽奖盒中抽出“禁书区线索包”，挑出三张能组成通行组合的牌。</p>
+      <p>在九张线索牌中，挑出三张能组成通行组合的牌。</p>
     </header>
 
     <section class="access-card-grid" aria-label="禁书区线索牌">

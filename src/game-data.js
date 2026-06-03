@@ -96,6 +96,15 @@ export const VISUAL_ASSETS = {
 
 export const ACCESS_CARDS = [
   {
+    id: 'bronze-key',
+    title: '旧铜钥匙',
+    symbol: 'BK',
+    type: 'decoy',
+    artifact: 'bronze-key',
+    tone: '#b27a45',
+    visibleText: '看起来像钥匙，正因为如此才可疑。'
+  },
+  {
     id: 'granger-note',
     title: '赫敏的页角批注',
     symbol: 'HG',
@@ -103,26 +112,6 @@ export const ACCESS_CARDS = [
     artifact: 'quill-note',
     tone: '#c8d7cf',
     visibleText: '逻辑先于勇气，页边的字永远不会骗人。',
-    isKey: true
-  },
-  {
-    id: 'otter-memory',
-    title: '水獭形记忆',
-    symbol: 'OT',
-    type: 'memory',
-    artifact: 'silver-ripple',
-    tone: '#9fd0d0',
-    visibleText: '银色水痕绕过禁书区的门缝。',
-    isKey: true
-  },
-  {
-    id: 'serpent-seal',
-    title: '银蛇封蜡',
-    symbol: 'SS',
-    type: 'house',
-    artifact: 'serpent-wax',
-    tone: '#72b08f',
-    visibleText: '只有蛇影知道哪扇门愿意打开。',
     isKey: true
   },
   {
@@ -135,6 +124,25 @@ export const ACCESS_CARDS = [
     visibleText: '会重燃，但不属于这扇门。'
   },
   {
+    id: 'library-dust',
+    title: '禁书灰尘',
+    symbol: 'LD',
+    type: 'hint',
+    artifact: 'library-dust',
+    tone: '#b9a56c',
+    visibleText: '真正的通行组合里，会同时有她、守护与学院。'
+  },
+  {
+    id: 'otter-memory',
+    title: '水獭形记忆',
+    symbol: 'OT',
+    type: 'memory',
+    artifact: 'silver-ripple',
+    tone: '#9fd0d0',
+    visibleText: '银色水痕绕过禁书区的门缝。',
+    isKey: true
+  },
+  {
     id: 'stag-print',
     title: '鹿角足迹',
     symbol: 'ST',
@@ -144,22 +152,14 @@ export const ACCESS_CARDS = [
     visibleText: '很英勇，也很容易把巡夜人引来。'
   },
   {
-    id: 'moon-ink',
-    title: '月光墨迹',
-    symbol: 'MI',
-    type: 'decoy',
-    artifact: 'moon-ink',
-    tone: '#aeb8d8',
-    visibleText: '适合写信，不适合开锁。'
-  },
-  {
-    id: 'bronze-key',
-    title: '旧铜钥匙',
-    symbol: 'BK',
-    type: 'decoy',
-    artifact: 'bronze-key',
-    tone: '#b27a45',
-    visibleText: '看起来像钥匙，正因为如此才可疑。'
+    id: 'serpent-seal',
+    title: '银蛇封蜡',
+    symbol: 'SS',
+    type: 'house',
+    artifact: 'serpent-wax',
+    tone: '#72b08f',
+    visibleText: '只有蛇影知道哪扇门愿意打开。',
+    isKey: true
   },
   {
     id: 'green-ribbon',
@@ -171,13 +171,13 @@ export const ACCESS_CARDS = [
     visibleText: '颜色正确，但没有留下推理痕迹。'
   },
   {
-    id: 'library-dust',
-    title: '禁书灰尘',
-    symbol: 'LD',
-    type: 'hint',
-    artifact: 'library-dust',
-    tone: '#b9a56c',
-    visibleText: '真正的通行组合里，会同时有她、守护与学院。'
+    id: 'moon-ink',
+    title: '月光墨迹',
+    symbol: 'MI',
+    type: 'decoy',
+    artifact: 'moon-ink',
+    tone: '#aeb8d8',
+    visibleText: '适合写信，不适合开锁。'
   }
 ];
 

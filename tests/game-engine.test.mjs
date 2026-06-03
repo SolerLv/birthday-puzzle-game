@@ -31,6 +31,14 @@ test('validates the forbidden-section clue cards without relying on visible inpu
   assert.equal(isAccessCardSetValid([ACCESS_CARD_IDS[0], ACCESS_CARD_IDS[1]]), false);
 });
 
+test('disperses forbidden-section key cards instead of putting answers first', () => {
+  const keyIndexes = ACCESS_CARD_IDS.map((id) => ACCESS_CARDS.findIndex((card) => card.id === id));
+
+  assert.notDeepEqual(keyIndexes, [0, 1, 2]);
+  assert.equal(isAccessCardSetValid(ACCESS_CARDS.slice(0, 3).map((card) => card.id)), false);
+  assert.equal(Math.max(...keyIndexes) - Math.min(...keyIndexes) >= 4, true);
+});
+
 test('keeps legacy access-code validation available for old saved sessions only', () => {
   assert.equal(isAccessCodeSetValid(['granger', ' OTTER ', 'Serpent']), true);
 });
